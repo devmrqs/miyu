@@ -2,6 +2,8 @@ import express, { type Express } from "express";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import mongoose from "mongoose";
+import cors from "cors";
+import { apiLimiter } from "../middlewares/rateLimiter.js";
 
 // Routes
 import { authRouter } from "../routes/auth.routes.js";
@@ -23,6 +25,14 @@ function formatUptime(seconds: number): string {
 export const app: Express = express();
 
 app.use(express.json());
+app.use(apiLimiter);
+
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  }),
+);
 
 app.use(
   session({

@@ -17,14 +17,17 @@
   "license": "ISC",
   "dependencies": {
     "connect-mongo": "^6.0.0",
+    "cors": "^2.8.6",
     "discord.js": "^14.27.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
     "express-session": "^1.19.0",
     "mongoose": "^9.10.1",
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/express-session": "^1.19.0",
     "@types/node": "^22.20.3",
