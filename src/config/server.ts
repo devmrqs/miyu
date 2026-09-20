@@ -8,6 +8,7 @@ import { authRouter } from "../routes/auth.routes.js";
 import { guildsRouter } from "../routes/guilds.routes.js";
 import { channelsRouter } from "../routes/channels.routes.js";
 import { messagesRouter } from "../routes/messages.routes.js";
+import { welcomeRouter } from "../routes/welcome.routes.js";
 
 // Middleware
 import { errorHandler } from "../middlewares/errorHandler.js";
@@ -51,5 +52,6 @@ app.use("/auth", authRouter);
 app.use("/guilds", guildsRouter);
 app.use("/guilds", channelsRouter);
 app.use("/guilds", messagesRouter);
+app.use("/guilds", welcomeRouter);
 
 app.use(errorHandler);

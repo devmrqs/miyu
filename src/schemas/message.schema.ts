@@ -1,5 +1,14 @@
 import { z } from "zod";
 
+const urlOrVariable = z.string().refine(
+  (value) => {
+    const isValidUrl = z.string().url().safeParse(value).success;
+    const isPlaceholder = /^\{[a-z_]+\}$/.test(value);
+    return isValidUrl || isPlaceholder;
+  },
+  { message: "Deve ser uma URL válida ou uma variável como {avatar_usuario}." },
+);
+
 const textBlockSchema = z.object({
   type: z.literal("text"),
   content: z.string().min(1).max(4000),
@@ -27,12 +36,12 @@ const buttonActionBlockSchema = z.object({
 const sectionThumbnailBlockSchema = z.object({
   type: z.literal("section-thumbnail"),
   content: z.string().min(1).max(4000),
-  imageUrl: z.string().url(),
+  imageUrl: urlOrVariable,
 });
 
 const mediaGalleryBlockSchema = z.object({
   type: z.literal("media-gallery"),
-  images: z.array(z.string().url()).min(1).max(10),
+  images: z.array(urlOrVariable).min(1).max(10),
 });
 
 const blockSchema = z.discriminatedUnion("type", [
