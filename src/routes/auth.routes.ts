@@ -69,3 +69,12 @@ authRouter.post("/logout", (req, res) => {
     res.json({ message: "Logout realizado com sucesso." });
   });
 });
+
+authRouter.get("/me", async (req, res) => {
+  if (!req.session.discordAccessToken) {
+    res.status(401).json({ error: "Não autenticado." });
+    return;
+  }
+
+  res.json({ userId: req.session.discordUserId });
+});
