@@ -36,7 +36,7 @@ welcomeRouter.put(
     const config = await WelcomeConfigModel.findOneAndUpdate(
       { guildId },
       { guildId, channelId, enabled, blocks, accentColor },
-      { upsert: true, new: true },
+      { upsert: true, returnDocument: "after" },
     );
 
     res.json(config);
