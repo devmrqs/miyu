@@ -54,10 +54,8 @@ authRouter.get("/discord/callback", async (req, res) => {
   req.session.discordTokenExpiresAt = Date.now() + expires_in * 1000;
   req.session.discordUserId = user.id;
 
-  res.json({
-    message: "Login realizado com sucesso!",
-    user: { id: user.id, username: user.username },
-  });
+  const { FRONTEND_URL } = process.env;
+  res.redirect(`${FRONTEND_URL}/dashboard`);
 });
 
 authRouter.post("/logout", (req, res) => {
