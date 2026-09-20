@@ -2,11 +2,17 @@ import { Router } from "express";
 import { client } from "../config/client.js";
 import { requireAuth } from "../middlewares/requireAuth.js";
 import { isGuildAdmin } from "../utils/discordPermissions.js";
+import { ensureValidToken } from "../utils/refreshDiscordToken.js";
 
 export const guildsRouter = Router();
 
 guildsRouter.get("/", requireAuth, async (req, res) => {
-  const accessToken = req.session.discordAccessToken!;
+  const accessToken = await ensureValidToken(req);
+
+  if (!accessToken) {
+    res.status(401).json({ error: "Não autenticado. Faça login primeiro." });
+    return;
+  }
 
   const guildsResponse = await fetch(
     "https://discord.com/api/users/@me/guilds",

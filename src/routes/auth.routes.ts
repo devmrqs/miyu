@@ -42,7 +42,7 @@ authRouter.get("/discord/callback", async (req, res) => {
   }
 
   const tokenData = await tokenResponse.json();
-  const { access_token } = tokenData;
+  const { access_token, refresh_token, expires_in } = tokenData;
 
   const userResponse = await fetch("https://discord.com/api/users/@me", {
     headers: { Authorization: `Bearer ${access_token}` },
@@ -50,6 +50,8 @@ authRouter.get("/discord/callback", async (req, res) => {
   const user = await userResponse.json();
 
   req.session.discordAccessToken = access_token;
+  req.session.discordRefreshToken = refresh_token;
+  req.session.discordTokenExpiresAt = Date.now() + expires_in * 1000;
   req.session.discordUserId = user.id;
 
   res.json({

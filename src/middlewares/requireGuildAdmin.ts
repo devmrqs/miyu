@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { isGuildAdmin } from "../utils/discordPermissions.js";
+import { ensureValidToken } from "../utils/refreshDiscordToken.js";
 
 export async function requireGuildAdmin(
   req: Request,
@@ -7,7 +8,7 @@ export async function requireGuildAdmin(
   next: NextFunction,
 ) {
   const guildId = req.params.guildId as string;
-  const accessToken = req.session.discordAccessToken;
+  const accessToken = await ensureValidToken(req);
 
   if (!accessToken) {
     res.status(401).json({ error: "Não autenticado. Faça login primeiro." });
