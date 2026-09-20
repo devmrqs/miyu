@@ -57,3 +57,15 @@ authRouter.get("/discord/callback", async (req, res) => {
     user: { id: user.id, username: user.username },
   });
 });
+
+authRouter.post("/logout", (req, res) => {
+  req.session.destroy((error) => {
+    if (error) {
+      res.status(500).json({ error: "Falha ao encerrar a sessão." });
+      return;
+    }
+
+    res.clearCookie("connect.sid");
+    res.json({ message: "Logout realizado com sucesso." });
+  });
+});

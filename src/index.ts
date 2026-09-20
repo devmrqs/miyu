@@ -1,8 +1,9 @@
 import "dotenv/config";
+import { validateEnv } from "./config/env.js";
 import { client } from "./config/client.js";
+import { connectDatabase } from "./config/database.js";
 import { loadEvents } from "./utils/loadEvents.js";
 import { loadCommands } from "./utils/loadCommands.js";
-import { connectDatabase } from "./config/database.js";
 import { startServer } from "./utils/startServer.js";
 
 process.on("unhandledRejection", (reason) => {
@@ -13,12 +14,9 @@ process.on("uncaughtException", (error) => {
   console.error("[process] exceção não capturada:", error);
 });
 
-const { DISCORD_TOKEN } = process.env;
+validateEnv();
 
-if (!DISCORD_TOKEN) {
-  console.error("[bot] DISCORD_TOKEN não definido no .env");
-  process.exit(1);
-}
+const { DISCORD_TOKEN } = process.env;
 
 await connectDatabase();
 await loadCommands(client);

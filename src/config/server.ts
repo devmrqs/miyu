@@ -3,7 +3,10 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import mongoose from "mongoose";
 import cors from "cors";
+
+// Middleware
 import { apiLimiter } from "../middlewares/rateLimiter.js";
+import { errorHandler } from "../middlewares/errorHandler.js";
 
 // Routes
 import { authRouter } from "../routes/auth.routes.js";
@@ -11,9 +14,6 @@ import { guildsRouter } from "../routes/guilds.routes.js";
 import { channelsRouter } from "../routes/channels.routes.js";
 import { messagesRouter } from "../routes/messages.routes.js";
 import { welcomeRouter } from "../routes/welcome.routes.js";
-
-// Middleware
-import { errorHandler } from "../middlewares/errorHandler.js";
 
 function formatUptime(seconds: number): string {
   const hrs = Math.floor(seconds / 3600);
@@ -25,7 +25,6 @@ function formatUptime(seconds: number): string {
 export const app: Express = express();
 
 app.use(express.json());
-app.use(apiLimiter);
 
 app.use(
   cors({
@@ -33,6 +32,8 @@ app.use(
     credentials: true,
   }),
 );
+
+app.use(apiLimiter);
 
 app.use(
   session({
