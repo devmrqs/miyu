@@ -5,6 +5,7 @@ const requiredEnvVars = [
   "REDIRECT_URI",
   "MONGODB_URI",
   "SESSION_SECRET",
+  "NODE_ENV",
 ] as const;
 
 export function validateEnv() {

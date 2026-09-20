@@ -24,7 +24,7 @@ function formatUptime(seconds: number): string {
 
 export const app: Express = express();
 
-app.use(express.json());
+app.use(express.json({ limit: "100kb" }));
 
 app.use(
   cors({
@@ -46,6 +46,8 @@ app.use(
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 dias
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
     },
   }),
 );
