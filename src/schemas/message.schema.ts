@@ -22,6 +22,7 @@ const buttonLinkBlockSchema = z.object({
   type: z.literal("button-link"),
   label: z.string().min(1).max(80),
   url: z.string().url(),
+  emoji: z.string().optional(),
 });
 
 const buttonActionBlockSchema = z.object({
@@ -57,8 +58,18 @@ export const createMessageSchema = z.object({
   channelId: z.string().min(1),
   blocks: z.array(blockSchema).min(1).max(20),
   accentColor: z
-    .string()
-    .regex(/^#[0-9A-Fa-f]{6}$/)
+    .preprocess(
+      (val) => {
+        if (!val || val === "" || val === "null" || val === "undefined") {
+          return null;
+        }
+        return val;
+      },
+      z
+        .string()
+        .regex(/^#[0-9A-Fa-f]{6}$/)
+        .nullable(),
+    )
     .optional(),
 });
 

@@ -25,7 +25,7 @@ const buttonStyleMap = {
 export function buildContainer(input: BuildContainerInput): ContainerBuilder {
   const container = new ContainerBuilder();
 
-  if (input.accentColor) {
+  if (input.accentColor && input.accentColor.trim() !== "") {
     container.setAccentColor(parseInt(input.accentColor.replace("#", ""), 16));
   }
 
@@ -50,6 +50,11 @@ export function buildContainer(input: BuildContainerInput): ContainerBuilder {
           .setLabel(block.label)
           .setURL(block.url)
           .setStyle(ButtonStyle.Link);
+
+        if (block.emoji) {
+          button.setEmoji(block.emoji);
+        }
+
         container.addActionRowComponents(
           new ActionRowBuilder<ButtonBuilder>().addComponents(button),
         );
