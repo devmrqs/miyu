@@ -3,7 +3,8 @@ import type { GuildMember } from "discord.js";
 import type { BotEvent } from "../types/event.js";
 import { WelcomeConfigModel } from "../models/WelcomeConfig.js";
 import { replaceVariablesInBlocks } from "../utils/replaceVariables.js";
-import { buildContainer } from "../utils/buildContainer.js";
+import { buildContainers } from "../utils/buildContainer.js";
+import type { ComponentGroupInput } from "../schemas/message.schema.js";
 
 const event: BotEvent<"guildMemberAdd"> = {
   name: "guildMemberAdd",
@@ -34,20 +35,19 @@ const event: BotEvent<"guildMemberAdd"> = {
       memberCount: member.guild.memberCount,
     };
 
-    const blocksWithVariables = replaceVariablesInBlocks(
-      config.blocks as never[],
-      context,
-    );
+    const componentsWithVariables = (
+      config.components as ComponentGroupInput[]
+    ).map((component) => ({
+      ...component,
+      blocks: replaceVariablesInBlocks(component.blocks as never[], context),
+    })) as ComponentGroupInput[];
 
-    const container = buildContainer({
-      blocks: blocksWithVariables as never,
-      accentColor: config.accentColor,
-    });
+    const containers = buildContainers(componentsWithVariables);
 
     try {
       await channel.send({
         flags: MessageFlags.IsComponentsV2,
-        components: [container],
+        components: containers,
       });
     } catch (error) {
       console.error(`[welcome] erro ao enviar mensagem de boas-vindas:`, error);

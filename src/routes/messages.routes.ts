@@ -4,7 +4,7 @@ import { client } from "../config/client.js";
 import { requireGuildAdmin } from "../middlewares/requireGuildAdmin.js";
 import { validateBody } from "../middlewares/validateBody.js";
 import { createMessageSchema } from "../schemas/message.schema.js";
-import { buildContainer } from "../utils/buildContainer.js";
+import { buildContainers } from "../utils/buildContainer.js";
 import type { CreateMessageInput } from "../schemas/message.schema.js";
 
 export const messagesRouter = Router();
@@ -15,7 +15,7 @@ messagesRouter.post(
   validateBody(createMessageSchema),
   async (req, res) => {
     const guildId = req.params.guildId as string;
-    const { channelId, blocks, accentColor } = req.body as CreateMessageInput;
+    const { channelId, components } = req.body as CreateMessageInput;
 
     const guild = client.guilds.cache.get(guildId);
 
@@ -35,12 +35,12 @@ messagesRouter.post(
       return;
     }
 
-    const container = buildContainer({ blocks, accentColor });
+    const containers = buildContainers(components);
 
     try {
       await channel.send({
         flags: MessageFlags.IsComponentsV2,
-        components: [container],
+        components: containers,
       });
 
       res.status(201).json({ message: "Mensagem enviada com sucesso!" });

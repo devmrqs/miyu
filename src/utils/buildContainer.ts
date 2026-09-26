@@ -11,9 +11,7 @@ import {
   MediaGalleryBuilder,
   MediaGalleryItemBuilder,
 } from "discord.js";
-import type { CreateMessageInput } from "../schemas/message.schema.js";
-
-type BuildContainerInput = Pick<CreateMessageInput, "blocks" | "accentColor">;
+import type { ComponentGroupInput } from "../schemas/message.schema.js";
 
 const buttonStyleMap = {
   primary: ButtonStyle.Primary,
@@ -22,7 +20,7 @@ const buttonStyleMap = {
   danger: ButtonStyle.Danger,
 } as const;
 
-export function buildContainer(input: BuildContainerInput): ContainerBuilder {
+export function buildContainer(input: ComponentGroupInput): ContainerBuilder {
   const container = new ContainerBuilder();
 
   if (input.accentColor && input.accentColor.trim() !== "") {
@@ -50,11 +48,7 @@ export function buildContainer(input: BuildContainerInput): ContainerBuilder {
           .setLabel(block.label)
           .setURL(block.url)
           .setStyle(ButtonStyle.Link);
-
-        if (block.emoji) {
-          button.setEmoji(block.emoji);
-        }
-
+        if (block.emoji) button.setEmoji(block.emoji);
         container.addActionRowComponents(
           new ActionRowBuilder<ButtonBuilder>().addComponents(button),
         );
@@ -97,4 +91,10 @@ export function buildContainer(input: BuildContainerInput): ContainerBuilder {
   }
 
   return container;
+}
+
+export function buildContainers(
+  components: ComponentGroupInput[],
+): ContainerBuilder[] {
+  return components.map((component) => buildContainer(component));
 }

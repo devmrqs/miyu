@@ -54,23 +54,24 @@ const blockSchema = z.discriminatedUnion("type", [
   mediaGalleryBlockSchema,
 ]);
 
+const nullableAccentColor = z.preprocess(
+  (val) =>
+    !val || val === "" || val === "null" || val === "undefined" ? null : val,
+  z
+    .string()
+    .regex(/^#[0-9A-Fa-f]{6}$/)
+    .nullable(),
+);
+
+export const componentGroupSchema = z.object({
+  blocks: z.array(blockSchema).min(1).max(20),
+  accentColor: nullableAccentColor.optional(),
+});
+
 export const createMessageSchema = z.object({
   channelId: z.string().min(1),
-  blocks: z.array(blockSchema).min(1).max(20),
-  accentColor: z
-    .preprocess(
-      (val) => {
-        if (!val || val === "" || val === "null" || val === "undefined") {
-          return null;
-        }
-        return val;
-      },
-      z
-        .string()
-        .regex(/^#[0-9A-Fa-f]{6}$/)
-        .nullable(),
-    )
-    .optional(),
+  components: z.array(componentGroupSchema).min(1).max(10),
 });
 
 export type CreateMessageInput = z.infer<typeof createMessageSchema>;
+export type ComponentGroupInput = z.infer<typeof componentGroupSchema>;

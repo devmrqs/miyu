@@ -30,12 +30,11 @@ welcomeRouter.put(
   validateBody(welcomeConfigSchema),
   async (req, res) => {
     const guildId = req.params.guildId as string;
-    const { channelId, enabled, blocks, accentColor } =
-      req.body as WelcomeConfigInput;
+    const { channelId, enabled, components } = req.body as WelcomeConfigInput;
 
     const config = await WelcomeConfigModel.findOneAndUpdate(
       { guildId },
-      { guildId, channelId, enabled, blocks, accentColor },
+      { guildId, channelId, enabled, components },
       { upsert: true, returnDocument: "after" },
     );
 

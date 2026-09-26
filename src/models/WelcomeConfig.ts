@@ -4,8 +4,7 @@ interface WelcomeConfig {
   guildId: string;
   channelId: string;
   enabled: boolean;
-  blocks: unknown[];
-  accentColor?: string;
+  components: unknown[];
 }
 
 const welcomeConfigSchema = new Schema<WelcomeConfig>(
@@ -13,8 +12,7 @@ const welcomeConfigSchema = new Schema<WelcomeConfig>(
     guildId: { type: String, required: true, unique: true },
     channelId: { type: String, required: true },
     enabled: { type: Boolean, default: true },
-    blocks: { type: [Schema.Types.Mixed], required: true },
-    accentColor: { type: String },
+    components: { type: [Schema.Types.Mixed], required: true },
   },
   { timestamps: true },
 );

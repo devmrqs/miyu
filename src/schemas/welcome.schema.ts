@@ -1,11 +1,10 @@
 import { z } from "zod";
-import { createMessageSchema } from "./message.schema.js";
+import { componentGroupSchema } from "./message.schema.js";
 
 export const welcomeConfigSchema = z.object({
   channelId: z.string().min(1),
   enabled: z.boolean().default(true),
-  blocks: createMessageSchema.shape.blocks,
-  accentColor: createMessageSchema.shape.accentColor,
+  components: z.array(componentGroupSchema).min(1).max(10),
 });
 
 export type WelcomeConfigInput = z.infer<typeof welcomeConfigSchema>;
